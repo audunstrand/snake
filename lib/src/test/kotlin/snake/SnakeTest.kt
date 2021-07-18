@@ -1,5 +1,7 @@
 package snake
 
+import snake.Game.TURN.LEFT
+import snake.Game.TURN.RIGHT
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -20,9 +22,8 @@ internal class SnakeTest {
     @Test
     fun testMove() {
         val snake = Snake(Point(3, 3))
-
-        assertEquals(Point(3, 4), snake.turnRight())
-        assertEquals(Point(4, 4), snake.turnLeft())
+        assertEquals(Point(3, 4), snake.move(RIGHT))
+        assertEquals(Point(4, 4), snake.move(LEFT))
     }
 
     @Test
@@ -30,7 +31,7 @@ internal class SnakeTest {
         val snake = Snake(Point(3, 3))
         assertEquals(1, snake.body.size)
         snake.eat()
-        val head = snake.turnRight()
+        val head = snake.move(RIGHT)
         assertEquals(2, snake.body.size)
         assertEquals(Point(3, 4), head)
     }
@@ -41,16 +42,16 @@ internal class SnakeTest {
         assertEquals(Point(3, 3), snake.head())
         assertEquals(1, snake.body.size)
         snake.eat()
-        snake.turnRight()
+        snake.move(RIGHT)
         assertFalse(snake.eatsHimself())
         snake.eat()
-        snake.turnRight()
+        snake.move(RIGHT)
         assertFalse(snake.eatsHimself())
         snake.eat()
-        snake.turnRight()
+        snake.move(RIGHT)
         assertFalse(snake.eatsHimself())
         snake.eat()
-        snake.turnRight()
+        snake.move(RIGHT)
         assertTrue(snake.eatsHimself())
     }
 

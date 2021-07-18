@@ -1,5 +1,6 @@
 package snake
 
+import snake.Game.TURN.*
 import kotlin.random.Random
 
 class Board(val size: Int, foodPercent: Int) {
@@ -9,18 +10,19 @@ class Board(val size: Int, foodPercent: Int) {
     fun isWall(point: Point) = point in walls
     fun isFood(point: Point) = point in food
     fun noMoreFood() = food.isEmpty()
+    fun removeFood(point: Point) = food.remove(point)
 
-    fun validMove(snake: Snake): List<Game.TURN> {
-        return listOf(
-            Game.TURN.NO_TURN to snake.head() + snake.currentDirection,
-            Game.TURN.LEFT to snake.head() + snake.currentDirection.turnLeft(),
-            Game.TURN.RIGHT to snake.head() + snake.currentDirection.turnRight()
+
+    fun validMoves(snake: Snake): List<Game.TURN> =
+        listOf(
+            NO_TURN to snake.head() + snake.currentDirection,
+            LEFT to snake.head() + snake.currentDirection.turnLeft(),
+            RIGHT to snake.head() + snake.currentDirection.turnRight()
         ).filter { isValid(it.second, snake) }.map { it.first }.toList().shuffled()
-    }
 
-    private fun isValid(point: Point, snake: Snake): Boolean {
-        return !(point in snake.body || point in walls)
-    }
+
+    private fun isValid(point: Point, snake: Snake): Boolean = !(point in snake.body || point in walls)
+
 
     fun print(snake: Snake) {
         var board = ""
@@ -49,6 +51,7 @@ class Board(val size: Int, foodPercent: Int) {
                 .toCollection(list)
         }
         return list
+
     }
 
     private fun wall(p: Point): Boolean {
@@ -66,8 +69,6 @@ class Board(val size: Int, foodPercent: Int) {
         return list
     }
 
-    fun removeFood(head: Point) {
-        food.remove(head)
-    }
+
 }
 

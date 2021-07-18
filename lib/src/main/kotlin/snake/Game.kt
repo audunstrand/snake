@@ -2,12 +2,11 @@ package snake
 
 
 import snake.Game.TURN.*
-import kotlin.random.Random.Default.nextInt
 
 fun main() {
     val game = Game()
     while (game.tick(game.validMove())) {
-        if (game.won()){
+        if (game.won()) {
             println("HURRA")
             break
         }
@@ -15,18 +14,14 @@ fun main() {
 }
 
 class Game(boardSize: Int = 20) {
-    private val board = Board(boardSize, 1)
+    private val board = Board(boardSize, 25)
     private val snake = Snake(Point(boardSize / 2, boardSize / 2))
 
     fun won() = board.noMoreFood()
-    fun validMove() = board.validMove(snake).getOrElse(0) { NO_TURN }
+    fun validMove() = board.validMoves(snake).getOrElse(0) { NO_TURN }
 
     fun tick(turn: TURN): Boolean {
-        val head = when (turn) {
-            RIGHT -> snake.turnRight()
-            LEFT -> snake.turnLeft()
-            NO_TURN -> snake.noTurn()
-        }
+        val head = snake.move(turn)
         board.print(snake)
 
         if (snake.eatsHimself()) return false.also { println("eats himself") }

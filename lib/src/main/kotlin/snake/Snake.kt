@@ -1,6 +1,7 @@
 package snake
 
 import snake.Direction.*
+import snake.Game.*
 
 
 class Snake(start: Point = Point(3, 3), var currentDirection: Direction = UP) {
@@ -13,12 +14,14 @@ class Snake(start: Point = Point(3, 3), var currentDirection: Direction = UP) {
     fun eat() = length++
 
     fun eatsHimself(): Boolean = head() in tail()
-    fun noTurn() = move(currentDirection)
-    fun turnRight(): Point = move(currentDirection.turnRight())
-    fun turnLeft(): Point = move(currentDirection.turnLeft())
 
+    fun move(turn: TURN): Point = when (turn) {
+        TURN.RIGHT -> moveIn(currentDirection.turnRight())
+        TURN.LEFT -> moveIn(currentDirection.turnLeft())
+        TURN.NO_TURN -> moveIn(currentDirection)
+    }
 
-    private fun move(direction: Direction): Point {
+    private fun moveIn(direction: Direction): Point {
         this.currentDirection = direction
         body.addFirst(head().new(direction))
         if (length < body.size) body.removeLast()
@@ -32,10 +35,10 @@ class Snake(start: Point = Point(3, 3), var currentDirection: Direction = UP) {
 
 enum class Direction(val x: Int, val y: Int) {
 
-    UP(0, 1),
-    DOWN(0, -1),
-    LEFT(-1, 0),
-    RIGHT(1, 0);
+    UP(1, 0),
+    DOWN(-1, 0),
+    LEFT(0, -1),
+    RIGHT(0, 1);
 
     fun turnRight(): Direction {
         return when (this) {
