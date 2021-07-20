@@ -8,7 +8,7 @@ fun main() {
     while (game.tick(game.validMove())) {
         if (game.won()) {
             println("HURRA ${game.points()} points")
-            break
+            return
         }
     }
 }
@@ -24,18 +24,18 @@ class Game(
     fun validMove() = board.validMoves(snake).getOrElse(0) { NO_TURN }
     fun tick(turn: TURN): Boolean {
         val head = snake.move(turn)
-        board.printWith(snake)
-
-        if (snake.eatsHimself()) return false.also { println("eats himself ${points()} points") }
-        if (board.isWall(head)) return false.also { println("hitsWall ${points()} points") }
-        if (board.isFood(head)) {
-            snake.eat()
-            board.removeFood(head)
-        }
-        return true
+        return when {
+            snake.eatsHimself() -> false.also { println("eats himself ${points()} points") }
+            board.isWall(head) -> false.also { println("hitsWall ${points()} points") }
+            board.isFood(head) -> true.also {
+                snake.eat()
+                board.removeFood(head)
+            }
+            else -> true
+        }.also { board.printWith(snake) }
     }
 
-    enum class TURN() {
+    enum class TURN {
         RIGHT,
         LEFT,
         NO_TURN

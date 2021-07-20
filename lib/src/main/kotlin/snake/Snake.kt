@@ -53,7 +53,6 @@ enum class Direction(val x: Int, val y: Int) {
 }
 
 data class Point(val x: Int, val y: Int) {
-
     fun new(direction: Direction): Point {
         return this + direction
     }
